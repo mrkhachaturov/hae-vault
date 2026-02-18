@@ -83,6 +83,10 @@ import_log   — id, file_hash, imported_at, metrics, sleep, workouts
 
 **Gotcha:** `calories_kj` in workouts is **kilojoules** — divide by 4.184 for kcal.
 
+## Sleep stages note
+
+User wears **WHOOP only** during sleep (no Apple Watch at night). WHOOP writes total sleep time to Apple Health but **does not export sleep stages** (deep/REM/core). Expect `deep_h`, `rem_h`, `core_h` = 0 for all recent sleep entries — this is correct, not missing data. For sleep stage breakdown, use the `whoop` skill instead.
+
 ## Output flags
 
 - `--json` on analysis commands (`dashboard`, `trends`) → machine-readable JSON
