@@ -4,21 +4,7 @@ description: >
   Apple Health archive database. Use for: historical Apple Health data (steps,
   heart rate, HRV, sleep, workouts, mindfulness, respiratory rate, blood oxygen
   from iPhone/Apple Watch), multi-day trends, long-term patterns. Data comes
-  from Health Auto Export iOS app synced to local SQLite. NOT for WHOOP data —
-  use whoop-up skill for that. NOT for live/real-time data.
-metadata:
-  openclaw:
-    emoji: "🍎"
-    requires:
-      bins:
-        - hvault
-    install:
-      - id: node
-        kind: node
-        package: hae-vault
-        bins:
-          - hvault
-        label: "Install hae-vault (node)"
+  from Health Auto Export iOS app synced to local SQLite.
 ---
 
 # hae-vault
