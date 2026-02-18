@@ -1,16 +1,27 @@
 ---
 name: hae-vault
 description: >
-  Apple Health data from iPhone/Apple Watch via Health Auto Export app. Use for:
-  steps, heart rate, HRV, resting heart rate, sleep stages, workouts, active calories,
-  VO2max, respiratory rate, blood oxygen, body weight, mindfulness minutes.
-  Use when asked about health trends, fitness, recovery, sleep quality, activity levels,
-  or any metric tracked by iPhone/Apple Watch. For WHOOP data, use the whoop skill instead.
+  Apple Health data from iPhone/Apple Watch via Health Auto Export app.
+  PRIMARY use: steps, walking distance, stand hours, active calories, VO2max,
+  workouts logged to Apple Health, body weight, blood oxygen spot checks.
+  SECONDARY (prefer whoop skill when available): HRV, resting heart rate, sleep.
+  Use when asked about daily activity, step counts, Apple Watch workouts, or
+  metrics not covered by WHOOP. Do NOT use for recovery score, strain, or sleep
+  stages — use the whoop skill for those.
 ---
 
 # hae-vault
 
 Query Apple Health data from a local SQLite database populated by the Health Auto Export iOS app.
+
+## Device context
+
+- **WHOOP** — worn 24/7 including sleep → authoritative for: recovery, sleep (total duration), HRV (continuous overnight), RHR (during sleep), strain, SpO2, skin temp, respiratory rate
+- **Apple Watch** — worn morning to night (not during sleep) → authoritative for: steps, walking distance, stand hours, active calories, Apple Health workouts, VO2max, daytime heart rate
+- **iPhone** — passive background tracking → supplements steps and distance when watch is off
+
+**Prefer `whoop` skill** for: recovery, sleep quality, HRV, RHR, strain — WHOOP measures these more accurately (continuous, during sleep).
+**Prefer `hae-vault`** for: steps, activity rings, workouts, VO2max, body metrics, anything Apple Watch/iPhone specific.
 
 ## Workflow
 
