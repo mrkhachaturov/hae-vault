@@ -23,8 +23,8 @@ export interface NormalizedSleep {
 }
 
 export function detectSleepVariant(dp: SleepDatapoint): SleepVariant {
-  if ('startDate' in dp && dp.startDate) return 'detailed';
-  if ('sleepStart' in dp && 'source' in dp && (dp as AggregatedSleepV2).source) return 'aggregated_v2';
+  if ('startDate' in dp) return 'detailed';
+  if ('core' in dp) return 'aggregated_v2';
   return 'aggregated_v1';
 }
 
