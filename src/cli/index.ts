@@ -1,4 +1,6 @@
 import { Command } from 'commander';
+import { createRequire } from 'node:module';
+const { version } = createRequire(import.meta.url)('../../package.json') as { version: string };
 import { serveCommand } from './serve.js';
 import { metricsCommand } from './metrics.js';
 import { sleepCommand } from './sleep.js';
@@ -16,7 +18,7 @@ export const program = new Command();
 program
   .name('hvault')
   .description('Apple Health data vault — ingest + query')
-  .version('0.2.0');
+  .version(version);
 
 program.addCommand(startCommand);
 program.addCommand(serveCommand);
