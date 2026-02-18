@@ -1,5 +1,6 @@
 import { Command } from 'commander';
 import { openDb } from '../db/schema.js';
+import { config } from '../config.js';
 
 export const summaryCommand = new Command('summary')
   .description('Summarise metrics (averages) over N days')
@@ -7,7 +8,7 @@ export const summaryCommand = new Command('summary')
   .option('--pretty', 'Pretty-print JSON', false)
   .option('-c, --color', 'Pretty terminal output with emoji indicators', false)
   .action((opts) => {
-    const db = openDb();
+    const db = openDb(config.dbPath);
     const since = new Date();
     since.setDate(since.getDate() - parseInt(opts.days, 10));
     const sinceStr = since.toISOString().slice(0, 10);

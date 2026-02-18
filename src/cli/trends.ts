@@ -1,5 +1,6 @@
 import { Command } from 'commander';
 import { openDb } from '../db/schema.js';
+import { config } from '../config.js';
 
 function fmt1(n: number): string {
   return n.toFixed(1);
@@ -55,7 +56,7 @@ export const trendsCommand = new Command('trends')
   .option('--days <n>', 'Days of history', '7')
   .option('--json', 'Output raw JSON')
   .action((opts) => {
-    const db = openDb();
+    const db = openDb(config.dbPath);
     const days = parseInt(opts.days, 10);
     const since = new Date();
     since.setDate(since.getDate() - days);

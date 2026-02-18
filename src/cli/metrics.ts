@@ -1,5 +1,6 @@
 import { Command } from 'commander';
 import { openDb } from '../db/schema.js';
+import { config } from '../config.js';
 
 export const metricsCommand = new Command('metrics')
   .description('Query health metrics')
@@ -7,7 +8,7 @@ export const metricsCommand = new Command('metrics')
   .option('--days <n>', 'Last N days', '30')
   .option('--pretty', 'Pretty-print JSON', false)
   .action((opts) => {
-    const db = openDb();
+    const db = openDb(config.dbPath);
     const since = new Date();
     since.setDate(since.getDate() - parseInt(opts.days, 10));
     const rows = db.prepare(`

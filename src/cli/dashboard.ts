@@ -1,5 +1,6 @@
 import { Command } from 'commander';
 import { openDb } from '../db/schema.js';
+import { config } from '../config.js';
 
 // ── helpers ──────────────────────────────────────────────────────────────────
 
@@ -112,7 +113,7 @@ export const dashboardCommand = new Command('dashboard')
   .option('--days <n>', 'Trend window in days', '7')
   .option('--json', 'Output raw JSON')
   .action((opts) => {
-    const db = openDb();
+    const db = openDb(config.dbPath);
     const trendDays = parseInt(opts.days, 10);
     const today = new Date().toISOString().slice(0, 10);
 
