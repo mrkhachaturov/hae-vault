@@ -68,3 +68,32 @@ test('second ingest with same data is idempotent — no duplicates', () => {
   assert.equal(sleepCount.c, 1);
   assert.equal(workoutsCount.c, 1);
 });
+
+test('ingest returns IngestResult with counts', () => {
+  const freshPayload: HaePayload = {
+    data: {
+      metrics: [
+        { name: 'step_count', units: 'count', data: [{ date: '2026-02-01 10:00:00 +0000', qty: 1000 }] },
+        {
+          name: 'sleep_analysis', units: 'hr',
+          data: [{
+            sleepStart: '2026-02-01 22:00:00 +0000',
+            sleepEnd: '2026-02-02 06:00:00 +0000',
+            core: 2.0, deep: 1.0, rem: 1.0, awake: 0.2, asleep: 4.0, inBed: 4.5,
+            source: 'Apple Watch'
+          }]
+        }
+      ],
+      workouts: [
+        { name: 'Cycling', start: '2026-02-01 07:00:00 +0000', end: '2026-02-01 08:00:00 +0000' }
+      ]
+    }
+  };
+  const result = ingest(db, freshPayload, { target: 'test', sessionId: 'sess-count', automationName: 'test', automationPeriod: 'manual' });
+  assert.ok(typeof result.metricsAdded === 'number');
+  assert.ok(typeof result.sleepAdded === 'number');
+  assert.ok(typeof result.workoutsAdded === 'number');
+  assert.equal(result.metricsAdded, 1);   // step_count only (sleep goes to sleep table)
+  assert.equal(result.sleepAdded, 1);
+  assert.equal(result.workoutsAdded, 1);
+});

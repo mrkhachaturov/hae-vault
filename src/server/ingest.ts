@@ -14,12 +14,19 @@ export interface IngestOptions {
   automationPeriod?: string;
 }
 
-export function ingest(db: Database.Database, payload: HaePayload, opts: IngestOptions): void {
+export interface IngestResult {
+  metricsAdded: number;
+  sleepAdded: number;
+  workoutsAdded: number;
+}
+
+export function ingest(db: Database.Database, payload: HaePayload, opts: IngestOptions): IngestResult {
   const { target, sessionId } = opts;
   const { data } = payload;
 
-  let metricsCount = 0;
-  let workoutsCount = 0;
+  let metricsAdded = 0;
+  let sleepAdded = 0;
+  let workoutsAdded = 0;
 
   // Process metrics
   for (const m of data.metrics ?? []) {
@@ -27,11 +34,12 @@ export function ingest(db: Database.Database, payload: HaePayload, opts: IngestO
       for (const dp of (m.data as SleepDatapoint[])) {
         const row = normalizeSleep(dp, target, sessionId);
         upsertSleep(db, row);
+        sleepAdded++;
       }
     } else {
       const rows = parseMetric(m, target, sessionId);
       upsertMetrics(db, rows);
-      metricsCount += rows.length;
+      metricsAdded += rows.length;
     }
   }
 
@@ -39,7 +47,7 @@ export function ingest(db: Database.Database, payload: HaePayload, opts: IngestO
   for (const w of data.workouts ?? []) {
     const row = parseWorkout(w, target, sessionId);
     upsertWorkout(db, row);
-    workoutsCount++;
+    workoutsAdded++;
   }
 
   // Log sync
@@ -50,9 +58,11 @@ export function ingest(db: Database.Database, payload: HaePayload, opts: IngestO
     new Date().toISOString(),
     target,
     sessionId,
-    metricsCount,
-    workoutsCount,
+    metricsAdded,
+    workoutsAdded,
     opts.automationName ?? null,
     opts.automationPeriod ?? null,
   );
+
+  return { metricsAdded, sleepAdded, workoutsAdded };
 }
