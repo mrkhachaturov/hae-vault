@@ -52,24 +52,28 @@ HAE Manual Export → .zip file → hvault import export.zip
 hae-vault/
 ├── src/
 │   ├── index.ts             ← entry point, Commander CLI
+│   ├── config.ts            ← env config singleton (dotenv + HVAULT_* vars)
 │   ├── server/
 │   │   ├── app.ts           ← Express HTTP server
-│   │   └── ingest.ts        ← parse payload → write to DB
+│   │   └── ingest.ts        ← parse payload → write to DB, returns IngestResult
 │   ├── db/
 │   │   ├── schema.ts        ← SQLite schema + openDb() + closeDb()
 │   │   ├── metrics.ts       ← upsertMetrics()
 │   │   ├── sleep.ts         ← upsertSleep()
-│   │   └── workouts.ts      ← upsertWorkout()
+│   │   ├── workouts.ts      ← upsertWorkout()
+│   │   └── importLog.ts     ← hasBeenImported() + logImport() (SHA-256 dedup)
 │   ├── parse/
 │   │   ├── time.ts          ← 5-format date parser
 │   │   ├── metrics.ts       ← MetricData[] → NormalizedMetric[]
 │   │   ├── sleep.ts         ← detect 3 variants, normalizeSleep()
 │   │   └── workouts.ts      ← WorkoutData[] → NormalizedWorkout
+│   ├── util/
+│   │   └── zip.ts           ← extractPayloadFromZip() — adm-zip, finds HealthAutoExport-*.json
 │   ├── cli/
 │   │   ├── index.ts         ← program + all command registrations
 │   │   ├── serve.ts         ← hvault serve
-│   │   ├── import.ts        ← hvault import <file>
-│   │   ├── watch.ts         ← hvault watch (polls dir, auto-imports)
+│   │   ├── import.ts        ← hvault import <file> (JSON or ZIP, dedup via import_log)
+│   │   ├── watch.ts         ← hvault watch (polls dir, auto-imports, exports tick())
 │   │   ├── metrics.ts       ← hvault metrics --metric <name> --days N
 │   │   ├── sleep.ts         ← hvault sleep --days N
 │   │   ├── workouts.ts      ← hvault workouts --days N
@@ -88,7 +92,11 @@ hae-vault/
 │   ├── db-metrics.test.ts
 │   ├── db-sleep.test.ts
 │   ├── db-workouts.test.ts
-│   └── ingest.test.ts
+│   ├── db-import-log.test.ts
+│   ├── ingest.test.ts
+│   ├── util-zip.test.ts
+│   └── cli-watch.test.ts
+├── docs/plans/              ← design + implementation plan docs
 ├── CLAUDE.md
 ├── SKILL.md                 ← OpenClaw skill definition
 ├── package.json             ← bin: { "hvault": "dist/index.js" }
@@ -131,13 +139,16 @@ hvault stats                          # row counts per table
 
 ## Environment Variables
 
-Loaded from `.env` file in CWD or process environment:
+Load order: CLI flag > env var > `.env` file > hardcoded default.
+
+In Docker: set env vars directly — no `.env` file needed.
 
 ```bash
-HVAULT_DB_PATH=~/.hae-vault/health.db   # SQLite DB location
+HVAULT_ENV_FILE=/path/to/.env            # override .env file location (default: CWD/.env)
+HVAULT_DB_PATH=~/.hae-vault/health.db   # SQLite DB location (tilde expanded)
 HVAULT_PORT=4242                         # serve port
 HVAULT_TOKEN=secret                      # bearer token for serve
-HVAULT_WATCH_DIR=~/Downloads             # directory to watch for exports
+HVAULT_WATCH_DIR=~/Downloads             # directory to watch for exports (tilde expanded)
 HVAULT_WATCH_INTERVAL=60                 # watch poll interval (seconds)
 HVAULT_TARGET=default                    # default target name
 ```
@@ -194,7 +205,7 @@ Detection: `'startDate' in dp` → detailed | `'core' in dp` → v2 | else → v
 npm install
 npm run dev -- serve             # run server without building
 npm run build                    # compile TypeScript → dist/
-npm test                         # run all tests (44 passing)
+npm test                         # run all tests (59 passing)
 npm install -g .                 # install globally as hvault
 ```
 
