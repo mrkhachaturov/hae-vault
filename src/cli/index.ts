@@ -7,6 +7,7 @@ import { summaryCommand } from './summary.js';
 import { queryCommand } from './query.js';
 import { sourcesCommand, lastSyncCommand, statsCommand } from './info.js';
 import { importCommand } from './import.js';
+import { watchCommand } from './watch.js';
 
 export const program = new Command();
 program
@@ -16,6 +17,7 @@ program
 
 program.addCommand(serveCommand);
 program.addCommand(importCommand);
+program.addCommand(watchCommand);
 program.addCommand(metricsCommand);
 program.addCommand(sleepCommand);
 program.addCommand(workoutsCommand);
