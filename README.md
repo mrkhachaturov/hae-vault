@@ -30,6 +30,7 @@ HVAULT_DB_PATH=~/.hae-vault/health.db   # SQLite DB location
 HVAULT_PORT=4242                         # ingest server port
 HVAULT_TOKEN=secret                      # bearer token for serve (optional)
 HVAULT_WATCH_DIR=~/Downloads             # directory to watch for exports
+HVAULT_WATCH_INTERVAL=60                 # watch poll interval in seconds (default: 60)
 ```
 
 ## Commands
