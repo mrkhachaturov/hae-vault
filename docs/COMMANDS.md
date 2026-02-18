@@ -22,6 +22,33 @@ hvault serve --port 4242 --token mysecret
 
 Configure HAE: Settings → REST API → URL: `http://your-server:4242/api/ingest`
 
+### API endpoints
+
+| Method | Path | Description |
+| --- | --- | --- |
+| `POST` | `/api/ingest` | Receive HAE payload (JSON body) |
+| `GET` | `/health` | Health check — returns `{"status":"ok"}` |
+
+**`POST /api/ingest`**
+
+Request body: HAE JSON payload (`Content-Type: application/json`, max 50mb)
+
+```json
+{ "data": { "metrics": [], "workouts": [], ... } }
+```
+
+Query parameter:
+- `?target=<name>` — tag ingested data with a device/person label (default: `default`)
+
+Request headers (optional):
+- `Authorization: Bearer <token>` or `X-Api-Key: <token>` — required if `--token` is set
+- `Session-Id: <id>` — links records to a sync session
+- `Automation-Name: <name>` — HAE automation name (logged to sync_log)
+- `Automation-Period: <period>` — HAE automation period (logged to sync_log)
+
+Response on success: `{"ok":true}`
+Response on error: `{"error":"<message>"}` with status 400 or 401
+
 ---
 
 ### `import`

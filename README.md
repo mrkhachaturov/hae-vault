@@ -21,6 +21,9 @@ hvault summary --color                # N-day averages with emoji indicators
 
 1. Install the [Health Auto Export](https://www.healthexportapp.com) iOS app
 2. In HAE: Settings → REST API → set server URL to `http://your-server:4242/api/ingest`
+   - Endpoint: `POST /api/ingest` (JSON body, max 50mb)
+   - Health check: `GET /health` → `{"status":"ok"}`
+   - Optional: append `?target=me` to tag data by device/person
 3. Or: export a ZIP from HAE and run `hvault import export.zip`
 
 **Optional:** create `.env` in your working directory to override defaults:
