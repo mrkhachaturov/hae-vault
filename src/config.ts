@@ -21,7 +21,7 @@ const DEFAULT_DB_PATH = join(homedir(), '.hae-vault', 'health.db');
 export const config = {
   dbPath:        expandTilde(process.env.HVAULT_DB_PATH ?? DEFAULT_DB_PATH),
   port:          Number(process.env.HVAULT_PORT ?? 4242),
-  token:         process.env.HVAULT_TOKEN,
+  token:         process.env.HVAULT_TOKEN ?? process.env.HVAULT_AUTH,
   watchDir:      process.env.HVAULT_WATCH_DIR ? expandTilde(process.env.HVAULT_WATCH_DIR) : undefined,
   watchInterval: Number(process.env.HVAULT_WATCH_INTERVAL ?? 60),
   target:        process.env.HVAULT_TARGET ?? 'default',

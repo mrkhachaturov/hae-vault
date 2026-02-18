@@ -32,6 +32,7 @@ hvault summary --color                # N-day averages with emoji indicators
 HVAULT_DB_PATH=~/.hae-vault/health.db   # SQLite DB location
 HVAULT_PORT=4242                         # ingest server port
 HVAULT_TOKEN=secret                      # bearer token for serve (optional)
+HVAULT_AUTH=secret                       # alias for HVAULT_TOKEN (use if _TOKEN is blocked)
 HVAULT_WATCH_DIR=~/Downloads             # directory to watch for exports
 HVAULT_WATCH_INTERVAL=60                 # watch poll interval in seconds (default: 60)
 ```
@@ -45,6 +46,10 @@ HVAULT_WATCH_INTERVAL=60                 # watch poll interval in seconds (defau
 | `hvault serve` | Start HTTP server, receive HAE REST API pushes |
 | `hvault import <file>` | Import HAE JSON or ZIP export (idempotent) |
 | `hvault watch` | Watch directory and auto-import new HAE exports |
+
+> **`watch` file matching:** only files matching `/^HealthAutoExport.*\.(zip|json)$/i` are picked up.
+> The Health Auto Export app names files this way by default (e.g. `HealthAutoExport-2020-2025.zip`).
+> Files with any other name are silently ignored.
 
 ### Query
 
@@ -172,6 +177,7 @@ Load order: CLI flag > env var > `.env` file > default.
 HVAULT_DB_PATH=~/.hae-vault/health.db   # SQLite DB location
 HVAULT_PORT=4242                         # serve port
 HVAULT_TOKEN=secret                      # bearer token for serve
+HVAULT_AUTH=secret                       # alias for HVAULT_TOKEN (use if _TOKEN is blocked by your env)
 HVAULT_WATCH_DIR=~/Downloads             # directory to watch
 HVAULT_WATCH_INTERVAL=60                 # watch poll interval (seconds)
 HVAULT_TARGET=default                    # default target name
