@@ -51,13 +51,16 @@ export function normalizeSleep(dp: SleepDatapoint, target: string, sessionId: st
   if (variant === 'aggregated_v2') {
     const v2 = dp as AggregatedSleepV2;
     const sleepStart = parseHaeTime(v2.sleepStart);
+    const stagesSum = (v2.core ?? 0) + (v2.deep ?? 0) + (v2.rem ?? 0);
+    const asleepH = v2.asleep || stagesSum || null;
+    const inBedH = v2.inBed || (asleepH != null && v2.awake != null ? asleepH + v2.awake : null);
     return {
       date: toDateStr(sleepStart),
       sleep_start: toIso(sleepStart),
       sleep_end: toIso(parseHaeTime(v2.sleepEnd)),
       in_bed_start: null, in_bed_end: null,
       core_h: v2.core, deep_h: v2.deep, rem_h: v2.rem, awake_h: v2.awake,
-      asleep_h: v2.asleep, in_bed_h: v2.inBed,
+      asleep_h: asleepH, in_bed_h: inBedH,
       schema_ver: 'aggregated_v2',
       source: v2.source,
       target, meta: null, session_id: sessionId,
