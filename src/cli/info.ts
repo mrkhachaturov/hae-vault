@@ -18,7 +18,7 @@ export const lastSyncCommand = new Command('last-sync')
   .option('--pretty', 'Pretty-print JSON', false)
   .action((opts) => {
     const db = openDb();
-    const row = db.prepare(`SELECT * FROM sync_log ORDER BY received_at DESC LIMIT 1`).get();
+    const row = db.prepare(`SELECT * FROM sync_log ORDER BY received_at DESC LIMIT 1`).get() ?? null;
     console.log(opts.pretty ? JSON.stringify(row, null, 2) : JSON.stringify(row));
   });
 
