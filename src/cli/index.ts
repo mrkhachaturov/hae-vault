@@ -9,6 +9,7 @@ import { sourcesCommand, lastSyncCommand, statsCommand } from './info.js';
 import { importCommand } from './import.js';
 import { watchCommand } from './watch.js';
 import { dashboardCommand } from './dashboard.js';
+import { trendsCommand } from './trends.js';
 
 export const program = new Command();
 program
@@ -25,6 +26,7 @@ program.addCommand(workoutsCommand);
 program.addCommand(summaryCommand);
 program.addCommand(queryCommand);
 program.addCommand(dashboardCommand);
+program.addCommand(trendsCommand);
 program.addCommand(sourcesCommand);
 program.addCommand(lastSyncCommand);
 program.addCommand(statsCommand);
