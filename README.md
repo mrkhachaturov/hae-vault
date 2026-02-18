@@ -43,7 +43,8 @@ HVAULT_WATCH_INTERVAL=60                 # watch poll interval in seconds (defau
 
 | Command | Description |
 | --- | --- |
-| `hvault serve` | Start HTTP server, receive HAE REST API pushes |
+| `hvault start` | Start server + watcher based on env vars (recommended for Docker/daemons) |
+| `hvault serve` | Start HTTP server only |
 | `hvault import <file>` | Import HAE JSON or ZIP export (idempotent) |
 | `hvault watch` | Watch directory and auto-import new HAE exports |
 

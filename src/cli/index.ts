@@ -10,13 +10,15 @@ import { importCommand } from './import.js';
 import { watchCommand } from './watch.js';
 import { dashboardCommand } from './dashboard.js';
 import { trendsCommand } from './trends.js';
+import { startCommand } from './start.js';
 
 export const program = new Command();
 program
   .name('hvault')
   .description('Apple Health data vault — ingest + query')
-  .version('0.1.0');
+  .version('0.2.0');
 
+program.addCommand(startCommand);
 program.addCommand(serveCommand);
 program.addCommand(importCommand);
 program.addCommand(watchCommand);
