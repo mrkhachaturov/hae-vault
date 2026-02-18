@@ -1,6 +1,6 @@
 {
   "name": "hae-vault",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "CLI + HTTP server for Apple Health data from Health Auto Export",
   "type": "module",
   "bin": {
