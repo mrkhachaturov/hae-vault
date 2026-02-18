@@ -17,8 +17,28 @@
   "engines": {
     "node": ">=22.0.0"
   },
+  "keywords": [
+    "apple-health",
+    "health-auto-export",
+    "sqlite",
+    "cli",
+    "hvault",
+    "sleep",
+    "hrv",
+    "steps",
+    "fitness",
+    "hae"
+  ],
   "author": "Ruben Khachaturov <mr.kha4a2rov@protonmail.com>",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mrkhachaturov/hae-vault.git"
+  },
+  "homepage": "https://github.com/mrkhachaturov/hae-vault#readme",
+  "bugs": {
+    "url": "https://github.com/mrkhachaturov/hae-vault/issues"
+  },
   "dependencies": {
     "adm-zip": "^0.5.16",
     "better-sqlite3": "^12.6.2",
