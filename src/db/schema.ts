@@ -85,6 +85,16 @@ export function openDb(dbPath = DEFAULT_DB_PATH): Database.Database {
       automation_name   TEXT,
       automation_period TEXT
     );
+
+    CREATE TABLE IF NOT EXISTS import_log (
+      id             INTEGER PRIMARY KEY,
+      filename       TEXT NOT NULL,
+      file_hash      TEXT NOT NULL UNIQUE,
+      imported_at    TEXT NOT NULL,
+      metrics_added  INTEGER,
+      sleep_added    INTEGER,
+      workouts_added INTEGER
+    );
   `);
 
   return db;

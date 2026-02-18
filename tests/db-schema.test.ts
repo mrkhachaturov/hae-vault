@@ -48,3 +48,8 @@ test('openDb is idempotent — calling twice does not throw', () => {
   const db2 = openDb(join(testDir, 'test.db'));
   closeDb(db2);
 });
+
+test('creates import_log table', () => {
+  const row = db.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='import_log'").get();
+  assert.ok(row);
+});
