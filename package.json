@@ -4,7 +4,7 @@
   "description": "CLI + HTTP server for Apple Health data from Health Auto Export",
   "type": "module",
   "bin": {
-    "hvault": "./dist/index.js"
+    "hvault": "dist/index.js"
   },
   "main": "./dist/index.js",
   "files": [
@@ -37,7 +37,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/mrkhachaturov/hae-vault.git"
+    "url": "git+https://github.com/mrkhachaturov/hae-vault.git"
   },
   "homepage": "https://github.com/mrkhachaturov/hae-vault#readme",
   "bugs": {
