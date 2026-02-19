@@ -1,42 +1,13 @@
 import { Command } from 'commander';
 import { openDb } from '../db/schema.js';
 import { config } from '../config.js';
+import { pad, fmt1, fmtInt, kj2kcal, arrow, ruler, trendLine, latestMetric, dailyAvgs } from './helpers.js';
 
-// ── helpers ──────────────────────────────────────────────────────────────────
-
-function pad(s: string, width: number): string {
-  return s.padEnd(width);
-}
-
-function fmt1(n: number | null | undefined): string {
-  if (n == null) return '—';
-  return n.toFixed(1);
-}
-
-function fmtInt(n: number | null | undefined): string {
-  if (n == null) return '—';
-  return Math.round(n).toLocaleString();
-}
+// ── local helpers (not shared) ────────────────────────────────────────────────
 
 function sec2min(s: number | null | undefined): string {
   if (s == null) return '—';
   return `${Math.round(s / 60)}min`;
-}
-
-function kj2kcal(kj: number | null | undefined): string {
-  if (kj == null) return '—';
-  return `${Math.round(kj / 4.184)} kcal`;
-}
-
-function arrow(first: number, last: number): string {
-  const delta = last - first;
-  if (Math.abs(delta) < 0.01 * Math.abs(first || 1)) return '→';
-  return delta > 0 ? '↑' : '↓';
-}
-
-function ruler(label: string, width = 43): string {
-  const inner = `── ${label} `;
-  return inner + '─'.repeat(Math.max(0, width - inner.length));
 }
 
 function workoutEmoji(name: string): string {
@@ -51,34 +22,6 @@ function workoutEmoji(name: string): string {
   return '🏅';
 }
 
-function latestMetric(
-  db: ReturnType<typeof openDb>,
-  metricName: string,
-  days = 7
-): number | null {
-  const since = new Date();
-  since.setDate(since.getDate() - days);
-  const row = db.prepare(
-    `SELECT qty FROM metrics WHERE metric = ? AND date >= ? AND qty IS NOT NULL ORDER BY ts DESC LIMIT 1`
-  ).get(metricName, since.toISOString().slice(0, 10)) as { qty: number } | undefined;
-  return row?.qty ?? null;
-}
-
-function dailyAvgs(
-  db: ReturnType<typeof openDb>,
-  metricName: string,
-  days: number
-): number[] {
-  const since = new Date();
-  since.setDate(since.getDate() - days);
-  const rows = db.prepare(
-    `SELECT date, AVG(qty) as avg_qty FROM metrics
-     WHERE metric = ? AND date >= ? AND qty IS NOT NULL
-     GROUP BY date ORDER BY date ASC`
-  ).all(metricName, since.toISOString().slice(0, 10)) as { date: string; avg_qty: number }[];
-  return rows.map(r => r.avg_qty);
-}
-
 function sleepDailyAvgs(
   db: ReturnType<typeof openDb>,
   days: number
@@ -89,21 +32,6 @@ function sleepDailyAvgs(
     `SELECT asleep_h FROM sleep WHERE date >= ? AND asleep_h IS NOT NULL ORDER BY date ASC`
   ).all(since.toISOString().slice(0, 10)) as { asleep_h: number }[];
   return rows.map(r => r.asleep_h);
-}
-
-function trendLine(
-  values: number[],
-  label: string,
-  unit: string,
-  round = false
-): string {
-  if (values.length < 2) return '';
-  const avg = values.reduce((a, b) => a + b, 0) / values.length;
-  const first = values[0];
-  const last = values[values.length - 1];
-  const dir = arrow(first, last);
-  const fmt = round ? fmtInt : fmt1;
-  return `   ${pad(label + ':', 14)} ${fmt(first)} → ${fmt(last)}${unit} ${dir}  (avg ${fmt(avg)})`;
 }
 
 // ── command ───────────────────────────────────────────────────────────────────
@@ -133,7 +61,7 @@ export const dashboardCommand = new Command('dashboard')
 
     // ── heart health (last 7 days) ─────────────────────────────────────────
     const restingHR = latestMetric(db, 'resting_heart_rate', 7);
-    const hrv = latestMetric(db, 'heart_rate_variability_sdnn', 7);
+    const hrv = latestMetric(db, 'heart_rate_variability', 7);
 
     // ── recent workouts ────────────────────────────────────────────────────
     const workouts = db.prepare(
@@ -143,7 +71,7 @@ export const dashboardCommand = new Command('dashboard')
     // ── trends ────────────────────────────────────────────────────────────
     const stepTrend = dailyAvgs(db, 'step_count', trendDays);
     const hrTrend = dailyAvgs(db, 'resting_heart_rate', trendDays);
-    const hrvTrend = dailyAvgs(db, 'heart_rate_variability_sdnn', trendDays);
+    const hrvTrend = dailyAvgs(db, 'heart_rate_variability', trendDays);
     const sleepTrend = sleepDailyAvgs(db, trendDays);
 
     // ── vault stats ───────────────────────────────────────────────────────
