@@ -1,29 +1,30 @@
 ---
 name: hvault
 description: >
-  Apple Health data from iPhone/Apple Watch via Health Auto Export app.
+  Apple Health database — aggregates data from all sources (Apple Watch, iPhone,
+  WHOOP app, third-party apps, manual entries) via Health Auto Export app.
   PRIMARY use: steps, walking distance, stand hours, active calories, VO2max,
-  workouts logged to Apple Health, body weight, blood oxygen spot checks.
-  SECONDARY (prefer whoop skill when available): HRV, resting heart rate, sleep.
-  Use when asked about daily activity, step counts, Apple Watch workouts, or
-  metrics not covered by WHOOP. Do NOT use for recovery score, strain, or sleep
-  stages — use the whoop skill for those.
+  workouts, body weight, blood oxygen spot checks — anything logged to Apple Health.
+  SECONDARY (prefer whoop skill when available): HRV, resting heart rate, sleep duration.
+  Do NOT use for recovery score, strain, or sleep stages — use the whoop skill for those.
 ---
 
 # hae-vault
 
 Query Apple Health data from a local SQLite database populated by the Health Auto Export iOS app.
+Apple Health is an aggregator — it collects data from Apple Watch, iPhone, WHOOP (when connected), and any other app writing to HealthKit.
 
 ## Device context
 
-- **WHOOP** — worn 24/7 including sleep → authoritative for: recovery, sleep (total duration), HRV (continuous overnight), RHR (during sleep), strain, SpO2, skin temp, respiratory rate
-- **Apple Watch** — worn morning to night (not during sleep) → authoritative for: steps, walking distance, stand hours, active calories, Apple Health workouts, VO2max, daytime heart rate
-- **iPhone** — passive background tracking → supplements steps and distance when watch is off
+- **Apple Health** — the aggregator; hae-vault is a local mirror of its full database
+- **WHOOP** — worn 24/7 including sleep → writes sleep duration + some metrics to Apple Health when connected; authoritative source (via `whoop` skill) for: recovery, sleep stages, HRV, RHR, strain, SpO2, skin temp, respiratory rate
+- **Apple Watch** — worn morning to night → primary contributor for: steps, stand hours, active calories, workouts, VO2max, daytime heart rate
+- **iPhone** — passive background tracking → supplements steps and distance
 
-**Prefer `whoop` skill** for: recovery, sleep quality, HRV, RHR, strain, activity intensity, calories burned — WHOOP is worn all day and captures all movement.
-**Prefer `hae-vault`** for: step count, walking distance, stand hours, workouts (Apple Health logs), VO2max, body metrics — these are Apple Watch/iPhone specific and not in WHOOP API.
+**Prefer `whoop` skill** for: recovery, sleep quality, HRV, RHR, strain — richer data and more accurate (continuous overnight measurement).
+**Use `hvault`** for: steps, walking distance, stand hours, workouts, VO2max, body metrics, and any Apple Health metric not in WHOOP.
 
-**Note:** WHOOP does not expose step count or walking distance via its API. For "how many steps" or "how far did I walk" → use hae-vault. For "how active/how hard did I work" → use whoop strain.
+**Note:** WHOOP API does not expose step count or walking distance. For "how many steps / how far did I walk" → use hvault. For "how active / how hard did I work" → use whoop strain.
 
 ## Workflow
 
