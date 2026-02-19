@@ -1,5 +1,5 @@
 ---
-name: hae-vault
+name: hvault
 description: >
   Apple Health data from iPhone/Apple Watch via Health Auto Export app.
   PRIMARY use: steps, walking distance, stand hours, active calories, VO2max,
