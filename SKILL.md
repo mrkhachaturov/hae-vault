@@ -4,7 +4,8 @@ description: >
   Apple Health database — aggregates data from all sources (Apple Watch, iPhone,
   WHOOP app, third-party apps, manual entries) via Health Auto Export app.
   PRIMARY use: steps, walking distance, stand hours, active calories, VO2max,
-  workouts, body weight, blood oxygen spot checks — anything logged to Apple Health.
+  workouts, body weight, blood oxygen spot checks, nutrition (dietary calories,
+  protein, carbs, fat, fiber, sugar) — anything logged to Apple Health.
   SECONDARY (prefer whoop skill when available): HRV, resting heart rate, sleep duration.
   Do NOT use for recovery score, strain, or sleep stages — use the whoop skill for those.
 ---
@@ -74,6 +75,12 @@ Non-obvious names to use with `hvault metrics --metric <name>`:
 | Resting HR | `resting_heart_rate` |
 | Active calories | `active_energy_burned` |
 | Basal calories | `basal_energy_burned` |
+| Dietary calories (food) | `dietary_energy` |
+| Protein intake | `protein` |
+| Carbohydrates | `carbohydrates` |
+| Fat intake | `total_fat` |
+| Fiber | `fiber` |
+| Sugar | `dietary_sugar` |
 | Blood oxygen | `blood_oxygen_saturation` |
 | Respiratory rate | `respiratory_rate` |
 | VO2max | `vo2max` |
