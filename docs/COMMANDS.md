@@ -208,6 +208,172 @@ Returns JSON array of row objects. Use `--pretty` for formatted output.
 
 ---
 
+## Domain query commands
+
+All domain query commands output compact JSON by default. Add `--pretty` for formatted JSON.
+
+---
+
+### `nutrition`
+
+Daily nutrition totals: calories, macros, sodium, cholesterol — one row per day.
+
+```bash
+hvault nutrition --days 30
+hvault nutrition --days 90 --pretty
+hvault nutrition --days 30 --entries         # raw per-entry rows instead of daily totals
+```
+
+| Flag | Description |
+| --- | --- |
+| `--days <n>` | Last N days (default: 30) |
+| `--pretty` | Pretty-print JSON |
+| `--entries` | Individual log entries instead of daily totals |
+
+Output (`--pretty`):
+```json
+[
+  {
+    "date": "2025-08-28",
+    "kcal": 1648.6,
+    "protein_g": 147.2,
+    "carbs_g": 95.8,
+    "fat_g": 75.6,
+    "fiber_g": 23,
+    "sugar_g": 17.3,
+    "sodium_mg": 2113,
+    "cholesterol_mg": 177
+  }
+]
+```
+
+---
+
+### `body`
+
+Daily body composition readings: weight, BMI, body fat percentage, lean mass.
+
+```bash
+hvault body --days 90
+hvault body --days 180 --pretty
+```
+
+| Flag | Description |
+| --- | --- |
+| `--days <n>` | Last N days (default: 90) |
+| `--pretty` | Pretty-print JSON |
+
+Output (`--pretty`):
+```json
+[
+  {
+    "date": "2025-08-28",
+    "weight_kg": 141,
+    "bmi": null,
+    "body_fat_pct": null,
+    "lean_mass_kg": null
+  }
+]
+```
+
+---
+
+### `vitals`
+
+Daily vitals: resting HR, HRV, walking HR, SpO2, respiratory rate, cardio recovery, VO2max, blood pressure.
+
+Blood pressure is parsed from the `meta` JSON field (`{"systolic":120,"diastolic":80}`).
+
+```bash
+hvault vitals --days 30
+hvault vitals --days 60 --pretty
+```
+
+| Flag | Description |
+| --- | --- |
+| `--days <n>` | Last N days (default: 30) |
+| `--pretty` | Pretty-print JSON |
+
+Output (`--pretty`):
+```json
+[
+  {
+    "date": "2025-12-23",
+    "resting_hr_bpm": 58,
+    "hrv_ms": null,
+    "walking_hr_avg_bpm": null,
+    "spo2_pct": 95.5,
+    "respiratory_rate": 15.3,
+    "cardio_recovery_bpm": null,
+    "vo2_max": null,
+    "systolic_mmhg": null,
+    "diastolic_mmhg": null
+  }
+]
+```
+
+---
+
+### `mobility`
+
+Daily mobility / gait metrics: walking speed, step length, asymmetry, double-support %, stair speed.
+
+```bash
+hvault mobility --days 30
+hvault mobility --days 60 --pretty
+```
+
+| Flag | Description |
+| --- | --- |
+| `--days <n>` | Last N days (default: 30) |
+| `--pretty` | Pretty-print JSON |
+
+Output (`--pretty`):
+```json
+[
+  {
+    "date": "2025-12-23",
+    "walking_speed_kmh": 4.46,
+    "step_length_cm": 71.1,
+    "asymmetry_pct": 2,
+    "double_support_pct": 32.3,
+    "stair_speed_up_ms": null,
+    "stair_speed_down_ms": null,
+    "six_min_walk_m": null
+  }
+]
+```
+
+---
+
+### `mindfulness`
+
+Daily wellness metrics: mindful minutes (summed), handwashing event count, time in daylight (summed).
+
+```bash
+hvault mindfulness --days 30
+hvault mindfulness --days 90 --pretty
+```
+
+| Flag | Description |
+| --- | --- |
+| `--days <n>` | Last N days (default: 30) |
+| `--pretty` | Pretty-print JSON |
+
+Output (`--pretty`):
+```json
+[
+  {
+    "date": "2025-09-01",
+    "mindful_min": 10,
+    "handwashing_count": 3,
+    "daylight_min": 42
+  }
+]
+```
+
+---
+
 ## Analysis commands
 
 ### `dashboard`
@@ -285,6 +451,168 @@ Output:
 ```
 
 Direction logic: compares first-half average vs second-half average of the period.
+
+---
+
+---
+
+### `ndash`
+
+Nutrition terminal dashboard: today's macros, calorie split with progress bars, N-day trends.
+
+```bash
+hvault ndash
+hvault ndash --days 90
+hvault ndash --json
+```
+
+| Flag | Description |
+| --- | --- |
+| `--days <n>` | Trend window in days (default: 7) |
+| `--json` | Output raw JSON |
+
+Output:
+```
+📅 2026-02-19 | 🍽️  Nutrition Dashboard
+
+── Today's Macros ────────────────────────────
+🍽️  711 kcal  (latest: 2025-10-06)
+   🥩 Protein: 70g  |  🍞 Carbs: 43g  |  🫒 Fat: 30g
+   🌿 Fiber: 7g  |  🍬 Sugar: 2g  |  🧂 Sodium: 71mg  |  💊 Cholesterol: 0mg
+
+── Macro Split (% of calories) ───────────────
+   🥩 Protein  ████████░░░░░░░░░░░░  38%   70g
+   🍞 Carbs    █████░░░░░░░░░░░░░░░  24%   43g
+   🫒 Fat      ████████░░░░░░░░░░░░  38%   30g
+
+── 180-Day Trends ────────────────────────────
+   Calories:      1,649 → 711 kcal ↓  (avg 1,820)
+   Protein:       147 → 70g ↓  (avg 141)
+   Carbs:         96 → 43g ↓  (avg 152)
+   Fat:           76 → 30g ↓  (avg 70)
+```
+
+---
+
+### `bdash`
+
+Body composition terminal dashboard: current weight/BMI/body fat, N-day trends.
+
+```bash
+hvault bdash
+hvault bdash --days 90
+hvault bdash --json
+```
+
+| Flag | Description |
+| --- | --- |
+| `--days <n>` | Trend window in days (default: 30) |
+| `--json` | Output raw JSON |
+
+Output:
+```
+📅 2026-02-19 | ⚖️  Body Composition Dashboard
+
+── Current ───────────────────────────────────
+⚖️  138.0 kg  |  BMI: —  |  Body Fat: —  (latest: 2025-10-01)
+   💪 Lean mass: —
+
+── 180-Day Trends ────────────────────────────
+   Weight:        141.0 → 138.0 kg ↓  (avg 138.9)
+```
+
+---
+
+### `vdash`
+
+Vitals terminal dashboard: current HR/HRV/SpO2, blood pressure, N-day trends.
+
+```bash
+hvault vdash
+hvault vdash --days 30
+hvault vdash --json
+```
+
+| Flag | Description |
+| --- | --- |
+| `--days <n>` | Trend window in days (default: 7) |
+| `--json` | Output raw JSON |
+
+Output:
+```
+📅 2026-02-19 | 💓 Vitals Dashboard
+
+── Current ───────────────────────────────────
+💓 Resting HR: 56bpm  |  HRV: —  |  🩺 SpO2: 92.7%  (latest: 2025-12-30)
+   🫁 Resp: 15.8/min
+
+── 60-Day Trends ─────────────────────────────
+   Resting HR:        58 → 56bpm ↓  (avg 60)
+   SpO2:              95.5 → 92.7% ↓  (avg 94.8)
+   Resp. rate:        15.3 → 15.8/min ↑  (avg 15.8)
+```
+
+---
+
+### `mdash`
+
+Mobility terminal dashboard: current gait metrics, N-day trends. Asymmetry and double-support arrows indicate better/worse direction.
+
+```bash
+hvault mdash
+hvault mdash --days 30
+hvault mdash --json
+```
+
+| Flag | Description |
+| --- | --- |
+| `--days <n>` | Trend window in days (default: 14) |
+| `--json` | Output raw JSON |
+
+Output:
+```
+📅 2026-02-19 | 🚶 Mobility Dashboard
+
+── Current ───────────────────────────────────
+🚶 Speed: 4.7 km/h  |  📐 Step: 71cm  |  ⚖️  Asym: 0.0%  (latest: 2025-12-30)
+   Double support: 33.5%
+
+── 60-Day Trends ─────────────────────────────
+   Walking speed:       4.5 → 4.7 km/h ↑  (avg 4.3)
+   Step length:         71.1 → 71.3cm →  (avg 67.8)
+   Asymmetry:           2.0 → 0.0% ↓ (better)  (avg 2.3)
+   Double support:      32.3 → 33.5% ↑ (worse)  (avg 33.4)
+```
+
+---
+
+### `wdash`
+
+Wellness terminal dashboard: mindfulness, daylight exposure, handwashing count, N-day trends.
+
+```bash
+hvault wdash
+hvault wdash --days 30
+hvault wdash --json
+```
+
+| Flag | Description |
+| --- | --- |
+| `--days <n>` | Trend window in days (default: 14) |
+| `--json` | Output raw JSON |
+
+Output:
+```
+📅 2026-02-19 | 🧘 Wellness Dashboard
+
+── Today ─────────────────────────────────────
+🧘 Mindfulness: 10min  |  🌅 Daylight: 42min  |  🫧 Handwashing: 3×
+
+── 14-Day Trends ─────────────────────────────
+   Mindful min:     8 → 12 min ↑  (avg 10)
+   Daylight min:    30 → 45 min ↑  (avg 38)
+   Handwashing:     2 → 3× ↑  (avg 2)
+```
 
 ---
 
