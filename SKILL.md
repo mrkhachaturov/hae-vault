@@ -67,30 +67,72 @@ hvault last-sync                   # last HAE push timestamp
 
 Non-obvious names to use with `hvault metrics --metric <name>`:
 
-| What you want | Metric name |
-|---|---|
-| Steps | `step_count` |
-| Heart rate | `heart_rate` |
-| HRV | `heart_rate_variability` |
-| Resting HR | `resting_heart_rate` |
-| Active calories | `active_energy_burned` |
-| Basal calories | `basal_energy_burned` |
-| Dietary calories (food) | `dietary_energy` |
-| Protein intake | `protein` |
-| Carbohydrates | `carbohydrates` |
-| Fat intake | `total_fat` |
-| Fiber | `fiber` |
-| Sugar | `dietary_sugar` |
-| Blood oxygen | `blood_oxygen_saturation` |
-| Respiratory rate | `respiratory_rate` |
-| VO2max | `vo2max` |
-| Body weight | `weight_body_mass` |
-| Body fat | `body_fat_percentage` |
-| Mindfulness | `mindful_minutes` |
-| Distance | `walking_running_distance` |
-| Flights climbed | `flights_climbed` |
+**Activity**
+| What you want | Metric name | Units |
+|---|---|---|
+| Steps | `step_count` | count |
+| Walking + running distance | `walking_running_distance` | km |
+| Active calories burned | `active_energy` | kJ |
+| Basal calories burned | `basal_energy_burned` | kJ |
+| Exercise time | `apple_exercise_time` | min |
+| Stand hours | `apple_stand_hour` | count |
+| Stand time | `apple_stand_time` | min |
+| Flights climbed | `flights_climbed` | count |
+| Physical effort | `physical_effort` | kcal/hr·kg |
+| Time in daylight | `time_in_daylight` | min |
 
-Use `hvault sources` to see what's actually in the DB.
+**Heart & Vitals**
+| What you want | Metric name | Units |
+|---|---|---|
+| Heart rate | `heart_rate` | count/min |
+| Resting HR | `resting_heart_rate` | count/min |
+| HRV | `heart_rate_variability` | ms |
+| Walking HR avg | `walking_heart_rate_average` | count/min |
+| Blood oxygen (SpO2) | `blood_oxygen_saturation` | % |
+| Respiratory rate | `respiratory_rate` | count/min |
+| Cardio recovery | `cardio_recovery` | count/min |
+| Blood pressure | `blood_pressure` | mmHg |
+
+**Walking mechanics**
+| What you want | Metric name | Units |
+|---|---|---|
+| Walking speed | `walking_speed` | km/hr |
+| Step length | `walking_step_length` | cm |
+| Walking asymmetry | `walking_asymmetry_percentage` | % |
+| Double support % | `walking_double_support_percentage` | % |
+| Stair speed up | `stair_speed_up` | m/s |
+| Stair speed down | `stair_speed_down` | m/s |
+| 6-min walk distance | `six_minute_walking_test_distance` | m |
+
+**Body metrics**
+| What you want | Metric name | Units |
+|---|---|---|
+| Body weight | `weight_body_mass` | kg |
+| Body fat % | `body_fat_percentage` | % |
+| BMI | `body_mass_index` | count |
+| VO2max | `vo2_max` | ml/(kg·min) |
+
+**Nutrition (logged via food tracking app)**
+| What you want | Metric name | Units |
+|---|---|---|
+| Dietary calories (food eaten) | `dietary_energy` | kJ |
+| Protein | `protein` | g |
+| Carbohydrates | `carbohydrates` | g |
+| Total fat | `total_fat` | g |
+| Fiber | `fiber` | g |
+| Sugar | `dietary_sugar` | g |
+| Sodium | `sodium` | mg |
+| Cholesterol | `cholesterol` | mg |
+
+**Other**
+| What you want | Metric name | Units |
+|---|---|---|
+| Mindfulness minutes | `mindful_minutes` | min |
+| Wrist temperature | `apple_sleeping_wrist_temperature` | degC |
+| Environmental noise | `environmental_audio_exposure` | dBASPL |
+| Headphone volume | `headphone_audio_exposure` | dBASPL |
+
+Use `hvault sources` to see everything in the DB with date ranges.
 
 ## SQL tables (for `hvault query`)
 
