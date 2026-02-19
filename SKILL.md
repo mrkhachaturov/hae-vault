@@ -54,6 +54,26 @@ hvault sleep --days 14             # sleep stages (deep, REM, core, awake)
 hvault workouts --days 30          # workouts with duration, calories, HR
 hvault metrics --metric <name> --days 30   # time series for one metric
 
+# Nutrition
+hvault nutrition --days 30         # daily macros + calories (JSON); --entries for raw rows
+hvault ndash --days 7              # nutrition dashboard: macros, split, trends
+
+# Body composition
+hvault body --days 90              # weight, BMI, body fat, lean mass (JSON)
+hvault bdash --days 30             # body dashboard: weight, body fat trends
+
+# Vitals
+hvault vitals --days 30            # resting HR, HRV, SpO2, VO2max, BP (JSON)
+hvault vdash --days 7              # vitals dashboard: heart, oxygen, recovery
+
+# Mobility / gait
+hvault mobility --days 30          # walking speed, step length, gait metrics (JSON)
+hvault mdash --days 14             # mobility dashboard: gait trends
+
+# Wellness
+hvault mindfulness --days 30       # mindful minutes, daylight, handwashing (JSON)
+hvault wdash --days 14             # wellness dashboard: mindfulness, daylight
+
 # Custom
 hvault query "<sql>"               # raw SQL, returns JSON array
 
@@ -152,7 +172,8 @@ User wears **WHOOP only** during sleep (no Apple Watch at night). WHOOP writes t
 
 ## Output flags
 
-- `--json` on analysis commands (`dashboard`, `trends`) → machine-readable JSON
-- `--pretty` on query commands (`metrics`, `sleep`, `workouts`, `summary`) → formatted JSON
+- `--json` on analysis/dashboard commands (`dashboard`, `trends`, `ndash`, `bdash`, `vdash`, `mdash`, `wdash`) → machine-readable JSON
+- `--pretty` on query commands (`metrics`, `sleep`, `workouts`, `summary`, `nutrition`, `body`, `vitals`, `mobility`, `mindfulness`) → formatted JSON
+- `--entries` on `nutrition` → individual log entries instead of daily totals
 - `--color` on `summary` → emoji terminal output (use for user-facing replies)
 - `--days <n>` on most commands to change the time window
